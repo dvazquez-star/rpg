@@ -1,27 +1,55 @@
-const canvas = document.getElementById('gameCanvas');
-const ctx = canvas.getContext('2d');
-let player = {x:400,y:300,width:32,height:32,speed:3,hp:100,ep:50,gold:0,level:1,inventory:[]};
-const keys = {};
-window.addEventListener('keydown', e => keys[e.key] = true);
-window.addEventListener('keyup', e => keys[e.key] = false);
-const dialogueBox = document.getElementById('dialogue');
-function showDialogue(text,duration=3000){dialogueBox.textContent=text;setTimeout(()=>dialogueBox.textContent='',duration);}
-function updateUI(){
-    document.getElementById('hp').textContent=player.hp;
-    document.getElementById('ep').textContent=player.ep;
-    document.getElementById('gold').textContent=player.gold;
-    document.getElementById('level').textContent=player.level;
-    const itemsEl=document.getElementById('items'); itemsEl.innerHTML='';
-    player.inventory.forEach(item=>{const li=document.createElement('li'); li.textContent=item; itemsEl.appendChild(li);});
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
+
+let player = { x: 400, y: 300, hp: 100, maxHp: 100, color: 'cyan' };
+let enemies = [
+    { x: 200, y: 200, hp: 50, maxHp: 50, color: 'red' },
+    { x: 600, y: 400, hp: 80, maxHp: 80, color: 'orange' }
+];
+
+function drawPlayer() {
+    ctx.fillStyle = player.color;
+    ctx.fillRect(player.x, player.y, 40, 40);
+    drawHealthBar(player);
 }
-function gameLoop(){
-    if(keys['ArrowUp']||keys['w']) player.y-=player.speed;
-    if(keys['ArrowDown']||keys['s']) player.y+=player.speed;
-    if(keys['ArrowLeft']||keys['a']) player.x-=player.speed;
-    if(keys['ArrowRight']||keys['d']) player.x+=player.speed;
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    ctx.fillStyle='cyan';
-    ctx.fillRect(player.x,player.y,player.width,player.height);
+
+function drawEnemies() {
+    enemies.forEach(e => {
+        ctx.fillStyle = e.color;
+        ctx.fillRect(e.x, e.y, 40, 40);
+        drawHealthBar(e);
+    });
+}
+
+function drawHealthBar(entity) {
+    let barWidth = 40;
+    let barHeight = 6;
+    let hpRatio = entity.hp / entity.maxHp;
+    ctx.fillStyle = 'black';
+    ctx.fillRect(entity.x, entity.y - 10, barWidth, barHeight);
+    ctx.fillStyle = hpRatio > 0.5 ? 'green' : hpRatio > 0.2 ? 'yellow' : 'red';
+    ctx.fillRect(entity.x, entity.y - 10, barWidth * hpRatio, barHeight);
+}
+
+function gameLoop() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawPlayer();
+    drawEnemies();
     requestAnimationFrame(gameLoop);
 }
-updateUI(); gameLoop();
+
+gameLoop();
+
+document.addEventListener('keydown', (e) => {
+    switch(e.key) {
+        case 'ArrowUp': player.y -= 10; break;
+        case 'ArrowDown': player.y += 10; break;
+        case 'ArrowLeft': player.x -= 10; break;
+        case 'ArrowRight': player.x += 10; break;
+    }
+});
+
+document.getElementById("adminBtn").addEventListener("click", () => {
+    let code = prompt("Introduce V-Code:");
+    if(code === "GIVEME100") player.hp = player.maxHp;
+});
