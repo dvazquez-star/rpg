@@ -1,28 +1,19 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TortTrain RPG</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<title>RPG GitHub</title>
+<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <div id="game-container">
-        <canvas id="gameCanvas" width="800" height="600"></canvas>
-        <div id="ui">
-            <div id="stats">
-                <p>HP: <span id="hp">100</span></p>
-                <p>EP: <span id="ep">50</span></p>
-                <p>Oro: <span id="gold">0</span></p>
-                <p>Nivel: <span id="level">1</span></p>
-            </div>
-            <div id="inventory">
-                <h3>Inventario</h3>
-                <ul id="items"></ul>
-            </div>
-            <div id="dialogue"></div>
-        </div>
+<h1>RPG GitHub</h1>
+<div id="game-container">
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+    <div id="menu">
+        <button id="inventoryBtn">Inventario</button>
+        <button id="adminBtn">Admin</button>
     </div>
-    <script src="game.js"></script>
+</div>
+<script src="js/game.js"></script>
 </body>
 </html>
